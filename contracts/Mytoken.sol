@@ -19,9 +19,11 @@ contract MyToken {
 
     // view token balance in address
     mapping (address => uint) public balanceOf;
+    mapping(address => mapping(address => uint)) public allowed;
 
     event Transfer(address indexed _from, address indexed _to, uint _value);
-
+    event Approved(address indexed _from, address indexed _to, uint _value);
+    
     // Transfer token
     function transfer(address _to, uint _value) external returns (bool) {
         require( _to != address(0), "To address invalid");
@@ -32,7 +34,17 @@ contract MyToken {
         return true;
     }
 
-    
+    function approve(address _to, uint _value) external {
+        require(_to != address(0), "invalid address");
+        allowed[msg.sender][_to] = _value;
+        emit Approved(msg.sender, _to, _value);
+    }
+
+    // View function to view token allowance
+    function allowance(address owner, address reciever) external view returns(uint) {
+        return allowed[owner][reciever];
+    }
+
 
 }
 
