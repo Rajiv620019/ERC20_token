@@ -45,6 +45,15 @@ contract MyToken {
         return allowed[owner][reciever];
     }
 
+    function transferFrom(address _from, address _to, uint _value) external returns(bool) {
+        require (_value <= balanceOf[_from], "Insufficient funds");
+        require(allowed[_from][_to] <= _value, "Insufficient funds");
+        balanceOf[_to] -= _value;
+        allowed[_from][_to] -= _value;
+        balanceOf[_to] += _value;
+        emit Transfer(msg.sender, _to, _value);
+        return true;
+    }
 
 }
 
