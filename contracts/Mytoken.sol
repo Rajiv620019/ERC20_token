@@ -12,6 +12,27 @@ contract MyToken {
         symbol = _symbol;
         decimals = _decimals;
         totalSupply = _totalSupply;
+
+        // Tokens added to senders address after creation
+        balanceOf[msg.sender] = totalSupply;
     }
+
+    // view token balance in address
+    mapping (address => uint) public balanceOf;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+
+    // Transfer token
+    function transfer(address _to, uint _value) external returns (bool) {
+        require( _to != address(0), "To address invalid");
+        require (_value <= balanceOf[msg.sender], "Insufficient funds");
+        balanceOf[msg.sender] -= _value;
+        balanceOf[_to] += _value;
+        emit Transfer(msg.sender, _to, _value);
+        return true;
+    }
+
+    
+
 }
 
